@@ -1,0 +1,16 @@
+<ion-content class="ion-padding">
+
+  <ion-item *ngFor="let p of inventario">
+    <ion-thumbnail slot="start" *ngIf="p.foto">
+      <img [src]="p.foto">
+    </ion-thumbnail>
+
+    <ion-label>
+      <h2>{{ p.nombre }} ({{ p.cantidadML }} ml)</h2>
+      <p>Código: {{ p.codigo }}</p>
+      <p>Categoría: {{ p.categoria }}</p>
+      <p>Unidades: {{ p.unidades }}</p>
+    </ion-label>
+  </ion-item>
+
+</ion-content>

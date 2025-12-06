@@ -1,0 +1,60 @@
+<ion-content class="ion-padding">
+
+  <ion-item>
+    <ion-label>Código de Serie (PK)</ion-label>
+    <ion-input [(ngModel)]="codigo"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Nombre</ion-label>
+    <ion-input [(ngModel)]="nombre"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Descripción</ion-label>
+    <ion-input [(ngModel)]="descripcion"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Cantidad (ml)</ion-label>
+    <ion-input type="number" [(ngModel)]="cantidadML"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Categoría</ion-label>
+    <ion-select [(ngModel)]="categoria">
+      <ion-select-option>Bebidas</ion-select-option>
+      <ion-select-option>Aguas</ion-select-option>
+      <ion-select-option>Vinos</ion-select-option>
+      <ion-select-option>Cervezas</ion-select-option>
+      <ion-select-option>Destilados</ion-select-option>
+      <ion-select-option>Cocktel</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Foto</ion-label>
+    <input type="file" (change)="seleccionarFoto($event)" />
+  </ion-item>
+
+  <ion-thumbnail *ngIf="foto">
+    <img [src]="foto">
+  </ion-thumbnail>
+
+  <ion-item>
+    <ion-label>Empaque por:</ion-label>
+    <ion-select [(ngModel)]="empaqueSeleccionado">
+      <ion-select-option *ngFor="let e of empaques">{{ e }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Displays recibidos</ion-label>
+    <ion-input type="number" [(ngModel)]="displays"></ion-input>
+  </ion-item>
+
+  <ion-button expand="block" color="success" (click)="guardarProducto()">
+    Guardar Producto
+  </ion-button>
+
+</ion-content>
