@@ -1,24 +1,12 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
-import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
   standalone: true,
-  imports: [IonicModule, CommonModule]
+  imports: [IonicModule, RouterModule],
+  templateUrl: './home.page.html',
+  styleUrls: ['./home.page.scss']
 })
-export class HomePage {
-
-  constructor(private router: Router) { }
-
-  irCrearProducto() {
-    this.router.navigate(['/create-product']);
-  }
-
-  irListarProductos() {
-    this.router.navigate(['/listado']);
-  }
-
-}
+export class HomePage {}

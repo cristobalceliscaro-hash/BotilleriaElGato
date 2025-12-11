@@ -1,59 +1,98 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Crear Producto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
 
+  <!-- CODIGO DE BARRA -->
   <ion-item>
-    <ion-label>Código de Serie (PK)</ion-label>
-    <ion-input [(ngModel)]="codigo"></ion-input>
+    <ion-label position="stacked">Código de Barra</ion-label>
+    <ion-input
+      type="text"
+      maxlength="13"
+      [(ngModel)]="product.codigo"
+      (ionInput)="sanitizeNumber('codigo')">
+    </ion-input>
   </ion-item>
 
+  <!-- NOMBRE -->
   <ion-item>
-    <ion-label>Nombre</ion-label>
-    <ion-input [(ngModel)]="nombre"></ion-input>
+    <ion-label position="stacked">Nombre</ion-label>
+    <ion-input
+      type="text"
+      maxlength="20"
+      [(ngModel)]="product.nombre">
+    </ion-input>
   </ion-item>
 
+  <!-- PRECIO -->
   <ion-item>
-    <ion-label>Descripción</ion-label>
-    <ion-input [(ngModel)]="descripcion"></ion-input>
+    <ion-label position="stacked">Precio</ion-label>
+    <ion-input
+      type="text"
+      maxlength="5"
+      [(ngModel)]="product.precio"
+      (ionInput)="sanitizeNumber('precio')">
+    </ion-input>
   </ion-item>
 
+  <!-- DESCRIPCIÓN -->
   <ion-item>
-    <ion-label>Cantidad (ml)</ion-label>
-    <ion-input type="number" [(ngModel)]="cantidadML"></ion-input>
+    <ion-label position="stacked">Descripción</ion-label>
+    <ion-textarea
+      maxlength="100"
+      auto-grow="true"
+      [(ngModel)]="product.descripcion">
+    </ion-textarea>
   </ion-item>
 
+  <!-- ML -->
   <ion-item>
-    <ion-label>Categoría</ion-label>
-    <ion-select [(ngModel)]="categoria">
-      <ion-select-option>Bebidas</ion-select-option>
-      <ion-select-option>Aguas</ion-select-option>
-      <ion-select-option>Vinos</ion-select-option>
-      <ion-select-option>Cervezas</ion-select-option>
-      <ion-select-option>Destilados</ion-select-option>
-      <ion-select-option>Cocktel</ion-select-option>
+    <ion-label position="stacked">Contenido (ml)</ion-label>
+    <ion-input
+      type="text"
+      maxlength="3"
+      [(ngModel)]="product.ml"
+      (ionInput)="sanitizeNumber('ml')">
+    </ion-input>
+  </ion-item>
+
+  <!-- CATEGORÍA -->
+  <ion-item>
+    <ion-label position="stacked">Categoría</ion-label>
+    <ion-select [(ngModel)]="product.categoria">
+      <ion-select-option value="Cervezas">Cervezas</ion-select-option>
+      <ion-select-option value="Bebidas o Aguas">Bebidas o Aguas</ion-select-option>
+      <ion-select-option value="Vinos">Vinos</ion-select-option>
+      <ion-select-option value="Destilados">Destilados</ion-select-option>
     </ion-select>
   </ion-item>
 
-  <ion-item>
-    <ion-label>Foto</ion-label>
-    <input type="file" (change)="seleccionarFoto($event)" />
+  <!-- FOTO -->
+  <ion-item class="ion-margin-top">
+    <ion-label position="stacked">Foto</ion-label>
+
+    <div class="photo-preview" *ngIf="product.foto">
+      <img [src]="product.foto" />
+    </div>
+
+    <ion-button expand="block" (click)="takePhoto()">
+      Tomar Foto
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" (click)="pickFromGallery()">
+      Elegir desde Galería
+    </ion-button>
   </ion-item>
 
-  <ion-thumbnail *ngIf="foto">
-    <img [src]="foto">
-  </ion-thumbnail>
-
-  <ion-item>
-    <ion-label>Empaque por:</ion-label>
-    <ion-select [(ngModel)]="empaqueSeleccionado">
-      <ion-select-option *ngFor="let e of empaques">{{ e }}</ion-select-option>
-    </ion-select>
-  </ion-item>
-
-  <ion-item>
-    <ion-label>Displays recibidos</ion-label>
-    <ion-input type="number" [(ngModel)]="displays"></ion-input>
-  </ion-item>
-
-  <ion-button expand="block" color="success" (click)="guardarProducto()">
+  <!-- BOTÓN GUARDAR -->
+  <ion-button
+    expand="block"
+    class="ion-margin-top"
+    color="success"
+    (click)="saveProduct()">
     Guardar Producto
   </ion-button>
 

@@ -1,8 +1,8 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'ionic.botilleriaelgato',
-  appName: 'botilleriaelgato',
+  appId: 'com.boti.liquer',
+  appName: 'botilleria',
   webDir: 'www'
 };
 

@@ -1,13 +1,10 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Botillería El Gato</ion-title>
+  </ion-toolbar>
+</ion-header>
+
 <ion-content class="ion-padding">
-
-  <h1>Gestión de Inventario</h1>
-
-  <ion-button expand="block" (click)="irCrearProducto()">
-    Crear Producto
-  </ion-button>
-
-  <ion-button expand="block" color="secondary" (click)="irListarProductos()">
-    Ver Productos
-  </ion-button>
-
+  <ion-button expand="block" routerLink="/create-product">Crear producto</ion-button>
+  <ion-button expand="block" color="secondary" routerLink="/product-list">Ver productos</ion-button>
 </ion-content>

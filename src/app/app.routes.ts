@@ -1,21 +1,11 @@
 import { Routes } from '@angular/router';
-import { HomePage } from './home/home.page';
+import { CreateProductPage } from './pages/create-product/create-product.page';
+import { ListProductsPage } from './pages/list-products/list-products.page';
+import { EditProductPage } from './pages/edit-product/edit-product.page';
 
 export const routes: Routes = [
-  {
-    path: '',
-    component: HomePage,
-  },
-  {
-    path: 'crear-producto',
-    loadComponent: () =>
-      import('./pages/create-product/create-product.page')
-        .then(m => m.CreateProductPage),
-  },
-  {
-    path: 'listar-productos',
-    loadComponent: () =>
-      import('./pages/list-products/list-products.page')
-        .then(m => m.ListProductsPage),
-  }
+  { path: '', redirectTo: 'list-products', pathMatch: 'full' },
+  { path: 'list-products', component: ListProductsPage },
+  { path: 'create-product', component: CreateProductPage },
+  { path: 'edit-product/:index', component: EditProductPage }
 ];

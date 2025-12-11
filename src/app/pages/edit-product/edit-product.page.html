@@ -1,0 +1,104 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Editar Producto</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/list-products"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Código de barras -->
+  <ion-item>
+    <ion-label position="floating">Código (solo números)</ion-label>
+    <ion-input
+      type="text"
+      [(ngModel)]="product.codigo"
+      maxlength="13"
+      inputmode="numeric"
+      (ionInput)="product.codigo = product.codigo.replace(/[^0-9]/g,'')">
+    </ion-input>
+  </ion-item>
+
+  <!-- Nombre -->
+  <ion-item>
+    <ion-label position="floating">Nombre (máx 20 caracteres)</ion-label>
+    <ion-input
+      type="text"
+      maxlength="20"
+      [(ngModel)]="product.nombre">
+    </ion-input>
+  </ion-item>
+
+  <!-- Precio -->
+  <ion-item>
+    <ion-label position="floating">Precio ($)</ion-label>
+    <ion-input
+      type="text"
+      maxlength="5"
+      inputmode="numeric"
+      [(ngModel)]="product.precio"
+      (ionInput)="product.precio = product.precio.replace(/[^0-9]/g,'')">
+    </ion-input>
+  </ion-item>
+
+  <!-- Mililitros -->
+  <ion-item>
+    <ion-label position="floating">Cantidad ML</ion-label>
+    <ion-input
+      type="text"
+      maxlength="3"
+      inputmode="numeric"
+      [(ngModel)]="product.ml"
+      (ionInput)="product.ml = product.ml.replace(/[^0-9]/g,'')">
+    </ion-input>
+  </ion-item>
+
+  <!-- Categoría -->
+  <ion-item>
+    <ion-label>Categoría</ion-label>
+    <ion-select [(ngModel)]="product.categoria">
+      <ion-select-option *ngFor="let c of categorias" [value]="c">{{ c }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <!-- Descripción -->
+  <ion-item>
+    <ion-label position="floating">Descripción (opcional, máx 100)</ion-label>
+    <ion-textarea
+      maxlength="100"
+      auto-grow="true"
+      [(ngModel)]="product.descripcion">
+    </ion-textarea>
+  </ion-item>
+
+  <!-- Foto actual -->
+  <div class="ion-text-center" style="margin-top: 20px;">
+    <img *ngIf="product.foto" [src]="product.foto" style="width: 200px; border-radius: 10px;">
+  </div>
+
+  <!-- Botones de foto -->
+  <div class="ion-text-center" style="margin-top: 10px;">
+    <ion-button color="secondary" (click)="takePhoto()">
+      📷 Tomar Foto
+    </ion-button>
+
+    <ion-button color="tertiary" (click)="pickFromGallery()">
+      🖼 Seleccionar Foto
+    </ion-button>
+  </div>
+
+  <!-- Botón actualizar -->
+  <ion-button expand="block" color="primary" style="margin-top: 25px;"
+              (click)="saveChanges()">
+    Guardar Cambios
+  </ion-button>
+
+  <!-- Botón eliminar -->
+  <ion-button expand="block" color="danger" fill="outline"
+              (click)="deleteProduct()">
+    Eliminar Producto
+  </ion-button>
+
+</ion-content>
