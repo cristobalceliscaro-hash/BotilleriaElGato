@@ -59,7 +59,7 @@ export class ProductService {
     }
   }
 
-  // Eliminar producto
+  // Eliminar producto prueba
   delete(codigo: string) {
     this.products = this.products.filter(p => p.codigo !== codigo);
     this.saveStorage();
