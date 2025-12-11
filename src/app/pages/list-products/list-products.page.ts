@@ -31,19 +31,20 @@ export class ListProductsPage implements OnInit {
     this.loadProducts();
   }
 
+
   loadProducts() {
-    this.products = this.productService.getProducts();
+  //  this.products = this.productService.load();
   }
 
   goToAddProduct() {
     this.router.navigate(['/add-product']);
   }
 
-  goToEditProduct(id: number) {
+  goToEditProduct(id: string | number) {
     this.router.navigate(['/edit-product', id]);
   }
 
-  async deleteProduct(id: number) {
+  async deleteProduct(id: string | number) {
     const alert = await this.alertController.create({
       header: 'Confirmar eliminación',
       message: '¿Seguro que deseas eliminar este producto?',
@@ -52,12 +53,13 @@ export class ListProductsPage implements OnInit {
           text: 'Cancelar',
           role: 'cancel'
         },
-        {
+       {
           text: 'Eliminar',
           handler: () => {
-            this.productService.deleteProduct(id);
+          //  this.productService.deleteProduct(id);
             this.loadProducts(); // recargar lista addasda
-        }
+          }
+        } 
       ]
     });
 

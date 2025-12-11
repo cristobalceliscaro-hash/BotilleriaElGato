@@ -17,7 +17,7 @@
       [(ngModel)]="product.codigo"
       maxlength="13"
       inputmode="numeric"
-      (ionInput)="product.codigo = product.codigo.replace(/[^0-9]/g,'')">
+      (ionInput)="filterNumeric('codigo')">
     </ion-input>
   </ion-item>
 
@@ -39,7 +39,7 @@
       maxlength="5"
       inputmode="numeric"
       [(ngModel)]="product.precio"
-      (ionInput)="product.precio = product.precio.replace(/[^0-9]/g,'')">
+      (ionInput)="filterNumeric('precio')">
     </ion-input>
   </ion-item>
 
@@ -51,7 +51,7 @@
       maxlength="3"
       inputmode="numeric"
       [(ngModel)]="product.ml"
-      (ionInput)="product.ml = product.ml.replace(/[^0-9]/g,'')">
+      (ionInput)="filterNumeric('ml')">
     </ion-input>
   </ion-item>
 

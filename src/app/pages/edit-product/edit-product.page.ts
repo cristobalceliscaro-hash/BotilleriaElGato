@@ -47,6 +47,10 @@ export class EditProductPage implements OnInit {
     }
   }
 
+  filterNumeric(field: 'codigo' | 'precio' | 'ml') {
+    this.product[field] = this.product[field].replace(/[^0-9]/g, '');
+  }
+
   async takePhoto() {
     try {
       const img = await Camera.getPhoto({
