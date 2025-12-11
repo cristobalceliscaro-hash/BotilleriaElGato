@@ -56,7 +56,7 @@ export class ListProductsPage implements OnInit {
           text: 'Eliminar',
           handler: () => {
             this.productService.deleteProduct(id);
-            this.loadProducts(); // recargar lista prueba commit
+            this.loadProducts(); // recargar lista prueba commit adaadsadadasdasd
           }
         }
       ]
