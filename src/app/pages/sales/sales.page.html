@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>⚡ Venta Rápida</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="sales-container">
+  <div class="sales-grid">
+    <!-- SECCIÓN IZQUIERDA: Entrada de código de barras -->
+    <div class="barcode-section">
+      <div class="barcode-input-container">
+        <ion-icon name="barcode" class="barcode-icon"></ion-icon>
+        <ion-input
+          #barcodeInput
+          [(ngModel)]="codigoBarras"
+          (keyup.enter)="onBarcodeEnter()"
+          placeholder="Escanea código de barras..."
+          class="barcode-input"
+          autofocus
+        ></ion-input>
+      </div>
+
+      <!-- Producto seleccionado -->
+      <div *ngIf="productoActual" class="producto-seleccionado">
+        <div class="producto-header">
+          <h3>{{ productoActual.nombre }}</h3>
+          <ion-button (click)="cancelarProducto()" fill="clear" size="small">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </div>
+
+        <div class="producto-info">
+          <div class="info-row">
+            <span class="label">Código:</span>
+            <span class="value">{{ productoActual.codigo }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Volumen:</span>
+            <span class="value">{{ productoActual.volumen.cantidad }} {{ productoActual.volumen.unidad }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Precio Unitario:</span>
+            <span class="value price">${{ productoActual.precioVenta }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Stock:</span>
+            <span class="value stock">{{ productoActual.cantidadUnidades }} unidades</span>
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="cantidad-section">
+          <label>Cantidad:</label>
+          <div class="cantidad-control">
+            <ion-button (click)="decrementarCantidad()" class="qty-btn">−</ion-button>
+            <input type="number" [(ngModel)]="cantidadVenta" min="1" class="qty-input" />
+            <ion-button (click)="incrementarCantidad()" class="qty-btn">+</ion-button>
+          </div>
+          <div class="subtotal">
+            Subtotal: <strong>${{ (cantidadVenta * parseFloat(productoActual.precioVenta)).toFixed(2) }}</strong>
+          </div>
+        </div>
+
+        <!-- Botón agregar al carrito -->
+        <ion-button expand="block" color="success" (click)="agregarAlCarrito()" class="add-btn">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Agregar al Carrito
+        </ion-button>
+      </div>
+
+      <!-- Si no hay producto seleccionado -->
+      <div *ngIf="!productoActual" class="no-product">
+        <ion-icon name="barcode"></ion-icon>
+        <p>Escanea un código de barras para comenzar</p>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DERECHA: Carrito -->
+    <div class="cart-section">
+      <div class="cart-header">
+        <h3>🛒 Carrito de Compras</h3>
+        <span class="cart-count" *ngIf="cartItems.length > 0">{{ cartItems.length }}</span>
+      </div>
+
+      <!-- Items del carrito -->
+      <div class="cart-items">
+        <div *ngIf="cartItems.length === 0" class="empty-cart">
+          <p>Carrito vacío</p>
+        </div>
+
+        <div *ngFor="let item of cartItems; let i = index" class="cart-item">
+          <div class="item-header">
+            <span class="item-name">{{ item.nombreProducto }}</span>
+            <ion-button (click)="eliminarDelCarrito(i)" fill="clear" size="small" color="danger">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </div>
+          <div class="item-details">
+            <div class="detail">
+              <span class="label">Qty:</span>
+              <span class="value">{{ item.cantidadVendida }}</span>
+            </div>
+            <div class="detail">
+              <span class="label">@</span>
+              <span class="value">${{ item.precioUnitario.toFixed(2) }}</span>
+            </div>
+            <div class="detail total">
+              <span class="label">Subtotal:</span>
+              <span class="value">${{ item.subtotal.toFixed(2) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumen del carrito -->
+      <div class="cart-summary">
+        <div class="summary-row">
+          <span>Cantidad Productos:</span>
+          <span class="value">{{ getTotalCantidadProductos() }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Subtotal Venta:</span>
+          <span class="value">{{ getSubtotalVenta().toFixed(2) }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Total Ganancia:</span>
+          <span class="value profit">${{ getTotalGanancia().toFixed(2) }}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span>TOTAL:</span>
+          <span class="total-value">${{ getSubtotalVenta().toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <!-- Botón finalizar -->
+      <ion-button
+        expand="block"
+        color="primary"
+        (click)="finalizarVenta()"
+        [disabled]="cartItems.length === 0"
+        class="finalize-btn"
+      >
+        <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+        Finalizar Venta
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+

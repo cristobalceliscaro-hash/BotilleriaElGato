@@ -1,9 +1,12 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Productos</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Inventario de Productos</ion-title>
     <ion-buttons slot="end">
-      <ion-button >
-        <ion-icon name="add-circle-outline"></ion-icon>
+      <ion-button (click)="goToAddProduct()" class="add-btn">
+        <ion-icon name="add-circle" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -11,34 +14,195 @@
 
 <ion-content class="ion-padding">
 
-  <ion-list>
+  <!-- ESTADÍSTICAS -->
+  <div class="stats-container" *ngIf="products.length > 0">
+    <ion-card class="stat-card total-products">
+      <ion-card-content>
+        <div class="stat-value">{{ getTotalProductos() }}</div>
+        <div class="stat-label">Productos</div>
+      </ion-card-content>
+    </ion-card>
 
-    <ion-item *ngFor="let product of products">
-      <ion-avatar slot="start">
-        <img [src]="product.foto || 'assets/no-img.png'" />
-      </ion-avatar>
+    <ion-card class="stat-card total-value">
+      <ion-card-content>
+        <div class="stat-value">${{ getValorTotalInventario().toFixed(2) }}</div>
+        <div class="stat-label">Valor Total</div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-      <ion-label>
-        <h2>{{ product.nombre }}</h2>
-        <p>Precio: ${{ product.precio }}</p>
-        <p>Categoría: {{ product.categoria }}</p>
-        <p>ML: {{ product.ml }}</p>
-      </ion-label>
+  <!-- BÚSQUEDA Y FILTROS -->
+  <div class="filters-container">
+    <ion-searchbar
+      [(ngModel)]="searchTerm"
+      (ionInput)="onSearchChange()"
+      placeholder="Buscar por nombre o código..."
+      cancelButtonText="Cancelar">
+    </ion-searchbar>
 
-      <ion-buttons slot="end">
+    <div class="category-filter">
+      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()">
+        <ion-segment-button value="Todos" layout="icon-bottom">
+          <ion-icon name="layers"></ion-icon>
+          <ion-label>Todos</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Cervezas" layout="icon-bottom">
+          <ion-icon name="beer"></ion-icon>
+          <ion-label>Cervezas</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Vinos" layout="icon-bottom">
+          <ion-icon name="wine"></ion-icon>
+          <ion-label>Vinos</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Destilados" layout="icon-bottom">
+          <ion-icon name="flask"></ion-icon>
+          <ion-label>Destilados</ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
-        <ion-button fill="clear" color="warning" (click)="goToEditProduct(product.codigo)">
-          <ion-icon name="create-outline"></ion-icon>
-        </ion-button>
+      <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()" class="other-categories">
+        <ion-segment-button value="Bebidas o Aguas" layout="icon-bottom">
+          <ion-icon name="water"></ion-icon>
+          <ion-label>Bebidas</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="Jugos" layout="icon-bottom">
+          <ion-icon name="glass"></ion-icon>
+          <ion-label>Jugos</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+  </div>
 
-        <ion-button fill="clear" color="danger" (click)="deleteProduct(product.codigo)">
-          <ion-icon name="trash-outline"></ion-icon>
-        </ion-button>
+  <!-- LISTA VACÍA -->
+  <div *ngIf="products.length === 0" class="empty-container">
+    <ion-icon name="cube-outline" class="empty-icon"></ion-icon>
+    <h2>No hay productos</h2>
+    <p>Comienza agregando tu primer producto</p>
+    <ion-button (click)="goToAddProduct()" color="primary" class="add-first-btn">
+      <ion-icon name="add-circle" slot="start"></ion-icon>
+      Crear Producto
+    </ion-button>
+  </div>
 
-      </ion-buttons>
+  <!-- TABLA RESUMEN POR CATEGORÍA -->
+  <div *ngIf="products.length > 0 && selectedCategory === 'Todos'" class="summary-section">
+    <h3 class="summary-title">
+      <ion-icon name="reader-outline"></ion-icon>
+      Resumen de Inventario por Categoría
+    </h3>
+    <div class="table-wrapper">
+      <table class="inventory-table">
+        <thead>
+          <tr>
+            <th>Categoría</th>
+            <th>Productos</th>
+            <th>Unidades</th>
+            <th>Packs</th>
+            <th>Valor Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let cat of ['Cervezas', 'Bebidas o Aguas', 'Jugos', 'Vinos', 'Destilados']">
+            <td class="category-cell">
+              <span class="category-name">{{ cat }}</span>
+            </td>
+            <td class="numeric">{{ getProductsByCategory($any(cat)) }}</td>
+            <td class="numeric">{{ getTotalUnidadesPorCategoria($any(cat)) }}</td>
+            <td class="numeric">{{ getTotalPacksPorCategoria($any(cat)) }}</td>
+            <td class="numeric amount">${{ getValorInventarioPorCategoria($any(cat)).toFixed(2) }}</td>
+          </tr>
+          <tr class="total-row">
+            <td class="category-cell"><strong>TOTAL</strong></td>
+            <td class="numeric"><strong>{{ products.length }}</strong></td>
+            <td class="numeric"><strong>{{ getTotalUnidadesGlobal() }}</strong></td>
+            <td class="numeric"><strong>{{ getTotalPacksGlobal() }}</strong></td>
+            <td class="numeric amount"><strong>${{ getValorTotalInventarioPorMargen().toFixed(2) }}</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-    </ion-item>
+  <!-- LISTA DE PRODUCTOS -->
+  <div *ngIf="filteredProducts.length === 0 && products.length > 0" class="no-results">
+    <ion-icon name="search-outline"></ion-icon>
+    <h3>Sin resultados</h3>
+    <p>No se encontraron productos con los filtros aplicados</p>
+  </div>
 
-  </ion-list>
+  <ion-grid *ngIf="filteredProducts.length > 0">
+    <ion-row class="product-grid">
+      <ion-col sizeSm="12" sizeMd="6" sizeLg="4" *ngFor="let product of filteredProducts">
+        <ion-card class="product-card">
+          <div class="card-image-container">
+            <img [src]="product.foto || 'assets/no-img.png'" alt="{{ product.nombre }}" class="card-image" />
+            <span class="category-badge">{{ product.categoria }}</span>
+            <span class="stock-badge" [ngClass]="product.cantidadUnidades > 0 ? 'in-stock' : 'out-of-stock'">
+              {{ product.cantidadUnidades || 0 }} unid.
+            </span>
+          </div>
+
+          <ion-card-content class="card-content">
+            <h2 class="product-title">{{ product.nombre }}</h2>
+            
+            <div class="product-info">
+              <div class="info-item">
+                <span class="label">Código:</span>
+                <span class="value code-value">{{ product.codigo }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Volumen:</span>
+                <span class="value">{{ product.volumen.cantidad }}{{ product.volumen.unidad }}</span>
+              </div>
+              <div class="info-item" *ngIf="product.descripcion">
+                <span class="label">Descripción:</span>
+                <span class="value desc-value">{{ product.descripcion }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Packs:</span>
+                <span class="value">{{ product.cantidadPacks }} x{{ product.unidadesPorPack }}</span>
+              </div>
+              <div class="info-item" *ngIf="product.unidadesPersonalizadas > 0">
+                <span class="label">+ Unidades:</span>
+                <span class="value">{{ product.unidadesPersonalizadas }}</span>
+              </div>
+            </div>
+
+            <!-- SECCIÓN DE PRECIOS -->
+            <div class="price-breakdown" *ngIf="product.precioCompra">
+              <div class="price-row">
+                <span class="price-label">Compra:</span>
+                <span class="price-value">${{ product.precioCompra }}</span>
+              </div>
+              <div class="price-row">
+                <span class="price-label">IVA (19%):</span>
+                <span class="price-value">${{ product.iva }}</span>
+              </div>
+              <div class="price-row">
+                <span class="price-label">Margen:</span>
+                <span class="price-value">{{ product.margenGanancia }}%</span>
+              </div>
+            </div>
+
+            <div class="price-section">
+              <span class="price-label">Precio Venta</span>
+              <h3 class="price">${{ product.precioVenta || product.precio }}</h3>
+            </div>
+
+            <div class="card-actions">
+              <ion-button fill="outline" color="warning" (click)="goToEditProduct(product.codigo)" expand="block">
+                <ion-icon name="create-outline" slot="start"></ion-icon>
+                Editar
+              </ion-button>
+              <ion-button fill="outline" color="danger" (click)="deleteProduct(product.codigo)" expand="block">
+                <ion-icon name="trash-outline" slot="start"></ion-icon>
+                Eliminar
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 </ion-content>

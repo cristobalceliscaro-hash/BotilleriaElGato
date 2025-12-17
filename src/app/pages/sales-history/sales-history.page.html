@@ -1,0 +1,205 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Historial de Ventas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Segmented Controls -->
+  <ion-segment [(ngModel)]="segmentView" class="segment-container">
+    <ion-segment-button value="report">
+      <ion-label>📊 Reporte</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="history">
+      <ion-label>📋 Historial</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="products">
+      <ion-label>🏆 Top Productos</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- VISTA DE REPORTE -->
+  <div *ngIf="segmentView === 'report'" class="report-view">
+    <!-- Filtro de Fechas -->
+    <ion-card class="date-filter-card">
+      <ion-card-header>
+        <ion-card-title>📅 Filtro por Fechas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="date-inputs">
+          <div class="date-group">
+            <label>Desde:</label>
+            <ion-item>
+              <ion-label>Seleccionar fecha</ion-label>
+              <ion-datetime
+                [(ngModel)]="startDate"
+                (ionChange)="onDateRangeChange()"
+                presentation="date"
+              ></ion-datetime>
+            </ion-item>
+          </div>
+          <div class="date-group">
+            <label>Hasta:</label>
+            <ion-item>
+              <ion-label>Seleccionar fecha</ion-label>
+              <ion-datetime
+                [(ngModel)]="endDate"
+                (ionChange)="onDateRangeChange()"
+                presentation="date"
+              ></ion-datetime>
+            </ion-item>
+          </div>
+        </div>
+        <ion-button expand="block" color="warning" (click)="onDateRangeChange()">
+          Aplicar Filtro
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Resumen General -->
+    <ion-card *ngIf="report" class="summary-card">
+      <ion-card-header>
+        <ion-card-title>💰 Resumen General</ion-card-title>
+      </ion-card-header>
+      <ion-card-content class="summary-content">
+        <div class="summary-stat">
+          <span class="stat-label">Total de Ventas:</span>
+          <span class="stat-value primary">${{ report.totalVentas.toFixed(2) }}</span>
+        </div>
+        <div class="summary-stat">
+          <span class="stat-label">Ganancia Total:</span>
+          <span class="stat-value success">${{ report.totalGanancia.toFixed(2) }}</span>
+        </div>
+        <div class="summary-stat">
+          <span class="stat-label">Transacciones:</span>
+          <span class="stat-value info">{{ report.cantidadTransacciones }}</span>
+        </div>
+        <div class="summary-stat" *ngIf="report.totalVentas > 0">
+          <span class="stat-label">Ganancia Promedio por Transacción:</span>
+          <span class="stat-value">${{ (report.totalGanancia / report.cantidadTransacciones).toFixed(2) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Ventas por Categoría -->
+    <ion-card *ngIf="report" class="category-sales-card">
+      <ion-card-header>
+        <ion-card-title>📦 Ventas por Categoría</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <table class="sales-table">
+          <thead>
+            <tr>
+              <th>Categoría</th>
+              <th>Ventas</th>
+              <th>Ganancia</th>
+              <th>%</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cat of categorias" [class.zero-sales]="!report.ventasPorCategoria[cat]">
+              <td class="category-name">{{ cat }}</td>
+              <td class="sales-amount">${{ (report.ventasPorCategoria[cat] || 0).toFixed(2) }}</td>
+              <td class="profit-amount">${{ getGananciaCategoria(cat).toFixed(2) }}</td>
+              <td class="percentage">
+                {{ report.totalVentas > 0 ? ((report.ventasPorCategoria[cat] || 0) / report.totalVentas * 100).toFixed(1) : 0 }}%
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botones de Acción -->
+    <div class="action-buttons">
+      <ion-button expand="block" color="primary" (click)="exportarReporte()">
+        <ion-icon name="download" slot="start"></ion-icon>
+        Exportar Reporte
+      </ion-button>
+      <ion-button expand="block" color="danger" (click)="limpiarHistorial()">
+        <ion-icon name="trash" slot="start"></ion-icon>
+        Limpiar Historial
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- VISTA DEL HISTORIAL -->
+  <div *ngIf="segmentView === 'history'" class="history-view">
+    <ion-card *ngIf="getAllSales().length === 0" class="empty-history">
+      <ion-card-content class="empty-content">
+        <p>📋 No hay ventas registradas</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngFor="let sale of getSalesFormatted()" class="history-item-card">
+      <ion-card-header>
+        <ion-card-title class="item-title">
+          {{ sale.nombreProducto }}
+        </ion-card-title>
+        <ion-note class="item-meta">
+          {{ sale.fechaFormato }}
+        </ion-note>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="history-row">
+          <span>Código:</span>
+          <span class="value">{{ sale.codigoProducto }}</span>
+        </div>
+        <div class="history-row">
+          <span>Categoría:</span>
+          <span class="value">{{ sale.categoriaProducto }}</span>
+        </div>
+        <div class="history-row">
+          <span>Cantidad:</span>
+          <span class="value">{{ sale.cantidadVendida }} unidades</span>
+        </div>
+        <div class="history-row">
+          <span>Precio Unitario:</span>
+          <span class="value">${{ sale.precioUnitario.toFixed(2) }}</span>
+        </div>
+        <div class="history-row total">
+          <span>Total:</span>
+          <span class="total-value">${{ sale.subtotal.toFixed(2) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- VISTA DE PRODUCTOS MÁS VENDIDOS -->
+  <div *ngIf="segmentView === 'products'" class="products-view">
+    <ion-card *ngIf="!report || report.productosMasVendidos.length === 0" class="empty-products">
+      <ion-card-content class="empty-content">
+        <p>🏆 No hay datos de productos vendidos</p>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngFor="let producto of report?.productosMasVendidos; let i = index" class="product-rank-card">
+      <ion-card-header>
+        <ion-card-title class="rank-title">
+          <span class="rank-badge">#{{ i + 1 }}</span>
+          {{ producto.nombre }}
+        </ion-card-title>
+        <ion-note class="product-code">Código: {{ producto.codigo }}</ion-note>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="rank-row">
+          <span>Unidades Vendidas:</span>
+          <span class="value">{{ producto.cantidad }}</span>
+        </div>
+        <div class="rank-row">
+          <span>Ganancia Total:</span>
+          <span class="value profit">${{ producto.ganancia.toFixed(2) }}</span>
+        </div>
+        <div class="rank-row">
+          <span>Ganancia Promedio por Unidad:</span>
+          <span class="value">${{ (producto.ganancia / producto.cantidad).toFixed(2) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

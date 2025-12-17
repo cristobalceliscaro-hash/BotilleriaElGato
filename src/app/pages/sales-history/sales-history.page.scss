@@ -1,0 +1,335 @@
+ion-header {
+  ion-toolbar {
+    --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+}
+
+ion-content {
+  --background: #f5f5f5;
+}
+
+.segment-container {
+  margin: 12px 0;
+  background: white;
+  border-radius: 8px;
+  display: flex;
+  padding: 8px;
+}
+
+.report-view,
+.history-view,
+.products-view {
+  padding-bottom: 20px;
+}
+
+// TARJETAS GENERALES
+ion-card {
+  margin: 12px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+// FILTRO DE FECHAS
+.date-filter-card {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.date-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.date-group {
+  label {
+    font-weight: 600;
+    font-size: 12px;
+    color: #555;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  ion-item {
+    border-radius: 8px;
+    background: white;
+  }
+}
+
+// TARJETA DE RESUMEN
+.summary-card {
+  background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+}
+
+.summary-content {
+  padding: 12px;
+}
+
+.summary-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  font-size: 14px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .stat-label {
+    font-weight: 600;
+    color: #2e7d32;
+  }
+
+  .stat-value {
+    font-weight: 700;
+    font-size: 16px;
+
+    &.primary {
+      color: #1976d2;
+    }
+
+    &.success {
+      color: #d32f2f;
+    }
+
+    &.info {
+      color: #0097a7;
+    }
+  }
+}
+
+// TABLA DE VENTAS POR CATEGORÍA
+.category-sales-card {
+  background: linear-gradient(135deg, #fff9c4 0%, #ffeb3b 100%);
+}
+
+.sales-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  thead {
+    background: rgba(0, 0, 0, 0.1);
+
+    th {
+      padding: 10px 6px;
+      text-align: right;
+      font-weight: 700;
+      color: #333;
+
+      &:first-child {
+        text-align: left;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+      }
+
+      &.zero-sales {
+        opacity: 0.6;
+      }
+
+      td {
+        padding: 10px 6px;
+        text-align: right;
+
+        &:first-child {
+          text-align: left;
+        }
+
+        &.category-name {
+          font-weight: 600;
+          color: #333;
+        }
+
+        &.sales-amount {
+          color: #1976d2;
+          font-weight: 600;
+        }
+
+        &.profit-amount {
+          color: #d32f2f;
+          font-weight: 600;
+        }
+
+        &.percentage {
+          color: #0097a7;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+// BOTONES DE ACCIÓN
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 12px;
+  margin-bottom: 20px;
+
+  ion-button {
+    --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-weight: 600;
+
+    &[color='danger'] {
+      --background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+    }
+  }
+}
+
+// VISTA DEL HISTORIAL
+.empty-history,
+.empty-products {
+  margin: 40px 0;
+  text-align: center;
+  background: #f5f5f5;
+}
+
+.empty-content {
+  padding: 40px 20px;
+  font-size: 18px;
+  color: #999;
+  font-weight: 500;
+}
+
+.history-item-card {
+  border-left: 5px solid #667eea;
+  background: white;
+}
+
+.item-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+}
+
+.item-meta {
+  font-size: 12px;
+  color: #999;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #666;
+
+  &.total {
+    border-top: 2px solid #ddd;
+    margin-top: 8px;
+    padding-top: 10px;
+    font-weight: 700;
+    color: #333;
+
+    .total-value {
+      color: #d32f2f;
+      font-weight: 700;
+      font-size: 15px;
+    }
+  }
+
+  .value {
+    font-weight: 600;
+    color: #333;
+  }
+}
+
+// VISTA DE PRODUCTOS MÁS VENDIDOS
+.product-rank-card {
+  border-left: 5px solid #ffc107;
+  background: white;
+}
+
+.rank-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .rank-badge {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 30px;
+    text-align: center;
+  }
+}
+
+.product-code {
+  font-size: 12px;
+  color: #999;
+}
+
+.rank-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 13px;
+  color: #666;
+
+  .value {
+    font-weight: 600;
+    color: #333;
+
+    &.profit {
+      color: #d32f2f;
+      font-weight: 700;
+    }
+  }
+}
+
+// RESPONSIVE
+@media (min-width: 768px) {
+  .date-inputs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .action-buttons {
+    flex-direction: row;
+
+    ion-button {
+      flex: 1;
+    }
+  }
+
+  .sales-table {
+    font-size: 14px;
+  }
+}
+
+// DARK MODE
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    --background: #1e1e1e;
+  }
+
+  ion-card {
+    background: #2d2d2d;
+    color: #fff;
+  }
+
+  .history-row,
+  .rank-row {
+    color: #ccc;
+
+    .value {
+      color: #fff;
+    }
+  }
+}

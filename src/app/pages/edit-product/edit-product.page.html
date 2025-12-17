@@ -1,103 +1,239 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Editar Producto</ion-title>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/list-products"></ion-back-button>
     </ion-buttons>
+    <ion-title>Editar Producto</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <!-- Código de barras -->
-  <ion-item>
-    <ion-label position="floating">Código (solo números)</ion-label>
-    <ion-input
-      type="text"
-      [(ngModel)]="product.codigo"
-      maxlength="13"
-      inputmode="numeric"
-      (ionInput)="filterNumeric('codigo')">
-    </ion-input>
-  </ion-item>
+  <ion-card class="form-card">
 
-  <!-- Nombre -->
-  <ion-item>
-    <ion-label position="floating">Nombre (máx 20 caracteres)</ion-label>
-    <ion-input
-      type="text"
-      maxlength="20"
-      [(ngModel)]="product.nombre">
-    </ion-input>
-  </ion-item>
+    <!-- SECCIÓN DE IMAGEN -->
+    <div class="photo-section">
+      <div class="photo-preview" *ngIf="product.foto">
+        <img [src]="product.foto" alt="Foto del producto" />
+        <ion-button fill="clear" color="danger" (click)="removeFoto()" class="remove-btn">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-button>
+      </div>
 
-  <!-- Precio -->
-  <ion-item>
-    <ion-label position="floating">Precio ($)</ion-label>
-    <ion-input
-      type="text"
-      maxlength="5"
-      inputmode="numeric"
-      [(ngModel)]="product.precio"
-      (ionInput)="filterNumeric('precio')">
-    </ion-input>
-  </ion-item>
+      <div class="photo-placeholder" *ngIf="!product.foto">
+        <ion-icon name="image-outline"></ion-icon>
+        <p>Foto del producto</p>
+      </div>
 
-  <!-- Mililitros -->
-  <ion-item>
-    <ion-label position="floating">Cantidad ML</ion-label>
-    <ion-input
-      type="text"
-      maxlength="3"
-      inputmode="numeric"
-      [(ngModel)]="product.ml"
-      (ionInput)="filterNumeric('ml')">
-    </ion-input>
-  </ion-item>
+      <div class="photo-buttons">
+        <ion-button expand="block" fill="outline" (click)="takePhoto()">
+          <ion-icon name="camera" slot="start"></ion-icon>
+          Tomar Foto
+        </ion-button>
+        <ion-button expand="block" fill="outline" (click)="pickFromGallery()">
+          <ion-icon name="images" slot="start"></ion-icon>
+          Galería
+        </ion-button>
+      </div>
+    </div>
 
-  <!-- Categoría -->
-  <ion-item>
-    <ion-label>Categoría</ion-label>
-    <ion-select [(ngModel)]="product.categoria">
-      <ion-select-option *ngFor="let c of categorias" [value]="c">{{ c }}</ion-select-option>
-    </ion-select>
-  </ion-item>
+    <!-- SECCIÓN DE CÓDIGO -->
+    <div class="form-section">
+      <h3 class="section-title">Identificación</h3>
+      <ion-item class="custom-item">
+        <ion-label position="floating">Código de Barra *</ion-label>
+        <ion-input
+          type="text"
+          inputmode="numeric"
+          maxlength="13"
+          [(ngModel)]="product.codigo"
+          (ionInput)="filterNumeric('codigo')"
+          placeholder="Mínimo 6 dígitos">
+        </ion-input>
+      </ion-item>
+    </div>
 
-  <!-- Descripción -->
-  <ion-item>
-    <ion-label position="floating">Descripción (opcional, máx 100)</ion-label>
-    <ion-textarea
-      maxlength="100"
-      auto-grow="true"
-      [(ngModel)]="product.descripcion">
-    </ion-textarea>
-  </ion-item>
+    <!-- SECCIÓN DE DATOS BÁSICOS -->
+    <div class="form-section">
+      <h3 class="section-title">Información General</h3>
 
-  <!-- Foto actual -->
-  <div class="ion-text-center" style="margin-top: 20px;">
-    <img *ngIf="product.foto" [src]="product.foto" style="width: 200px; border-radius: 10px;">
-  </div>
+      <ion-item class="custom-item">
+        <ion-label position="floating">Nombre del Producto *</ion-label>
+        <ion-input
+          type="text"
+          maxlength="50"
+          [(ngModel)]="product.nombre"
+          placeholder="Ej: Cerveza Pilsner">
+        </ion-input>
+      </ion-item>
 
-  <!-- Botones de foto -->
-  <div class="ion-text-center" style="margin-top: 10px;">
-    <ion-button color="secondary" (click)="takePhoto()">
-      📷 Tomar Foto
-    </ion-button>
+      <ion-item class="custom-item">
+        <ion-label position="floating">Descripción</ion-label>
+        <ion-textarea
+          maxlength="200"
+          auto-grow="true"
+          [(ngModel)]="product.descripcion"
+          placeholder="Detalles adicionales del producto">
+        </ion-textarea>
+      </ion-item>
+    </div>
 
-    <ion-button color="tertiary" (click)="pickFromGallery()">
-      🖼 Seleccionar Foto
-    </ion-button>
-  </div>
+    <!-- SECCIÓN DE PRECIOS Y VOLUMEN -->
+    <div class="form-section">
+      <h3 class="section-title">Precio de Compra</h3>
 
-  <!-- Botón actualizar -->
-  <ion-button expand="block" color="primary" style="margin-top: 25px;"
-              (click)="saveChanges()">
-    Guardar Cambios
+      <ion-item class="custom-item">
+        <ion-label position="floating">Precio de Compra ($) *</ion-label>
+        <ion-input
+          type="text"
+          inputmode="decimal"
+          [(ngModel)]="product.precioCompra"
+          (ionInput)="filterPrecioCompra('precioCompra')"
+          placeholder="0.00">
+        </ion-input>
+      </ion-item>
+    </div>
+
+    <!-- SECCIÓN DE INVENTARIO Y PACKS -->
+    <div class="form-section">
+      <h3 class="section-title">Inventario</h3>
+
+      <ion-item class="custom-item">
+        <ion-label position="floating">Unidades por Pack *</ion-label>
+        <ion-select [(ngModel)]="product.unidadesPorPack" (ionChange)="onUnidadesPorPackChange()">
+          <ion-select-option value="6">Pack x 6 unidades</ion-select-option>
+          <ion-select-option value="8">Pack x 8 unidades</ion-select-option>
+          <ion-select-option value="12">Pack x 12 unidades</ion-select-option>
+          <ion-select-option value="24">Pack x 24 unidades</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item class="custom-item">
+        <ion-label position="floating">Cantidad de Packs *</ion-label>
+        <ion-input
+          type="number"
+          inputmode="numeric"
+          [(ngModel)]="product.cantidadPacks"
+          (ionChange)="filterCantidadPacks()"
+          placeholder="Ej: 3">
+        </ion-input>
+      </ion-item>
+
+      <ion-item class="custom-item">
+        <ion-label position="floating">Unidades Adicionales (opcional)</ion-label>
+        <ion-input
+          type="number"
+          inputmode="numeric"
+          [(ngModel)]="product.unidadesPersonalizadas"
+          (ionChange)="filterUnidadesPersonalizadas()"
+          placeholder="Ej: 4">
+        </ion-input>
+      </ion-item>
+
+      <div class="info-display">
+        <span class="info-label">Total de Unidades:</span>
+        <span class="info-value">{{ product.cantidadUnidades }} unid.</span>
+      </div>
+
+      <div class="info-display secondary">
+        <span class="info-label">Equivale a:</span>
+        <span class="info-value">{{ getTotalUnidadesFormato() }}</span>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DE VOLUMEN -->
+    <div class="form-section">
+      <h3 class="section-title">Contenido por Unidad</h3>
+
+      <div class="volumen-container">
+        <ion-item class="custom-item volumen-input">
+          <ion-label position="floating">Cantidad *</ion-label>
+          <ion-input
+            type="text"
+            inputmode="numeric"
+            maxlength="5"
+            [(ngModel)]="product.volumen.cantidad"
+            (ionInput)="filterVolumen()"
+            placeholder="Ej: 500">
+          </ion-input>
+        </ion-item>
+
+        <ion-item class="custom-item volumen-select">
+          <ion-label position="floating">Unidad *</ion-label>
+          <ion-select [(ngModel)]="product.volumen.unidad">
+            <ion-select-option value="ml">Mililitros (ml)</ion-select-option>
+            <ion-select-option value="lt">Litros (lt)</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DE MARGEN Y CÁLCULOS -->
+    <div class="form-section">
+      <h3 class="section-title">Margen de Ganancia</h3>
+
+      <ion-item class="custom-item">
+        <ion-label position="floating">Margen de Ganancia (%)*</ion-label>
+          <ion-select [(ngModel)]="product.margenGanancia" (ionChange)="onMargenChange()">
+            <ion-select-option value="11">11% Ganancia</ion-select-option>
+            <ion-select-option value="21">21% Ganancia</ion-select-option>
+            <ion-select-option value="30">30% Ganancia</ion-select-option>
+            <ion-select-option value="35">35% Ganancia</ion-select-option>
+            <ion-select-option value="40">40% Ganancia</ion-select-option>
+          </ion-select>
+      </ion-item>
+
+      <div class="calculations-display" *ngIf="product.precioCompra">
+        <div class="calc-row">
+          <span class="calc-label">Precio de Compra:</span>
+          <span class="calc-value">${{ product.precioCompra }}</span>
+        </div>
+        <div class="calc-row">
+          <span class="calc-label">IVA (19%):</span>
+          <span class="calc-value">${{ product.iva }}</span>
+        </div>
+        <div class="calc-row total">
+          <span class="calc-label">Precio de Venta:</span>
+          <span class="calc-value">${{ product.precioVenta }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN DE CATEGORÍA -->
+    <div class="form-section">
+      <h3 class="section-title">Categoría</h3>
+      <ion-item class="custom-item">
+        <ion-label position="floating">Tipo de Bebida *</ion-label>
+        <ion-select [(ngModel)]="product.categoria">
+          <ion-select-option value="Cervezas">🍺 Cervezas</ion-select-option>
+          <ion-select-option value="Bebidas o Aguas">💧 Bebidas o Aguas</ion-select-option>
+          <ion-select-option value="Jugos">🧃 Jugos</ion-select-option>
+          <ion-select-option value="Vinos">🍷 Vinos</ion-select-option>
+          <ion-select-option value="Destilados">🥃 Destilados</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+
+  </ion-card>
+
+  <!-- BOTONES DE ACCIÓN -->
+  <ion-button
+    expand="block"
+    class="save-button"
+    color="success"
+    [disabled]="!isValid() || isLoading"
+    (click)="saveChanges()">
+    <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+    {{ isLoading ? 'Guardando...' : 'Guardar Cambios' }}
   </ion-button>
 
-  <!-- Botón eliminar -->
-  <ion-button expand="block" color="danger" fill="outline"
-              (click)="deleteProduct()">
+  <ion-button
+    expand="block"
+    class="delete-button"
+    color="danger"
+    fill="outline"
+    (click)="deleteProduct()">
+    <ion-icon name="trash" slot="start"></ion-icon>
     Eliminar Producto
   </ion-button>
 

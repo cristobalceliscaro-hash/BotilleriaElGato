@@ -1,0 +1,154 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Botillería El Gato</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="hero-section">
+    <div class="logo-container">
+      <ion-icon name="wine" class="logo-icon"></ion-icon>
+    </div>
+    <h1 class="app-title">Botillería El Gato</h1>
+    <p class="app-subtitle">Gestión Inteligente de Inventario</p>
+  </div>
+
+  <div class="buttons-container">
+    <ion-button
+      (click)="goToCreateProduct()"
+      class="action-button create-btn"
+      expand="block"
+    >
+      <ion-icon name="add-circle" slot="start"></ion-icon>
+      <span>Crear Producto</span>
+    </ion-button>
+
+    <ion-button
+      (click)="goToListProducts()"
+      class="action-button list-btn"
+      expand="block"
+    >
+      <ion-icon name="list" slot="start"></ion-icon>
+      <span>Listado de Productos</span>
+    </ion-button>
+
+    <ion-button
+      (click)="goToSales()"
+      class="action-button sales-btn"
+      expand="block"
+    >
+      <ion-icon name="cart" slot="start"></ion-icon>
+      <span>Registrar Venta</span>
+    </ion-button>
+
+    <ion-button
+      (click)="goToSalesHistory()"
+      class="action-button history-btn"
+      expand="block"
+    >
+      <ion-icon name="bar-chart" slot="start"></ion-icon>
+      <span>Historial de Ventas</span>
+    </ion-button>
+  </div>
+
+  <div class="features-section">
+    <h2 class="section-title">Características</h2>
+    
+    <div class="features-grid">
+      <ion-card class="feature-card">
+        <ion-card-content>
+          <ion-icon name="barcode" class="feature-icon"></ion-icon>
+          <h3>Código de Barras</h3>
+          <p>Identifica rápidamente tus productos</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="feature-card">
+        <ion-card-content>
+          <ion-icon name="camera" class="feature-icon"></ion-icon>
+          <h3>Fotografías</h3>
+          <p>Captura o importa imágenes de productos</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="feature-card">
+        <ion-card-content>
+          <ion-icon name="list-circle" class="feature-icon"></ion-icon>
+          <h3>Categorías</h3>
+          <p>Organiza tu inventario por tipo</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="feature-card">
+        <ion-card-content>
+          <ion-icon name="search" class="feature-icon"></ion-icon>
+          <h3>Búsqueda</h3>
+          <p>Encuentra productos rápidamente</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="feature-card">
+        <ion-card-content>
+          <ion-icon name="calculator" class="feature-icon"></ion-icon>
+          <h3>Análisis</h3>
+          <p>Estadísticas del inventario</p>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="feature-card">
+        <ion-card-content>
+          <ion-icon name="volumes" class="feature-icon"></ion-icon>
+          <h3>Volumen</h3>
+          <p>Ml o litros, tú decides</p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <div class="categories-section">
+    <h2 class="section-title">Categorías</h2>
+    
+    <div class="categories-grid">
+      <ion-card class="category-card">
+        <ion-card-content>
+          <ion-icon name="beer"></ion-icon>
+          <h4>Cervezas</h4>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="category-card">
+        <ion-card-content>
+          <ion-icon name="water"></ion-icon>
+          <h4>Bebidas</h4>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="category-card">
+        <ion-card-content>
+          <ion-icon name="glass"></ion-icon>
+          <h4>Jugos</h4>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="category-card">
+        <ion-card-content>
+          <ion-icon name="wine"></ion-icon>
+          <h4>Vinos</h4>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="category-card">
+        <ion-card-content>
+          <ion-icon name="flask"></ion-icon>
+          <h4>Destilados</h4>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <div class="info-footer">
+    <ion-icon name="information-circle"></ion-icon>
+    <p>Versión 1.0 - Gestión de Inventario</p>
+  </div>
+
+</ion-content>
